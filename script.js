@@ -2,7 +2,7 @@
 const options = {
 	method: 'GET',
 	headers: {
-		'x-rapidapi-key': 'dff63f747cmshcbcd9beec90fd7fp10301bjsna532b649e523',
+		'x-rapidapi-key': '31893a1294msh96293e0cb78d251p10fc83jsn996632a18605',
 		'x-rapidapi-host': 'yahoo-weather5.p.rapidapi.com'
 	}
 };
@@ -16,7 +16,8 @@ const getWeather = async (cityValue) => {
 			const response = await fetch(`https://yahoo-weather5.p.rapidapi.com/weather?location=${cityValue}`, options);
 			const data = await response.json();
 			
-			document.getElementById('temperature').innerHTML = data.current_observation.condition.temperature;
+			const temp=data.current_observation.condition.temperature;
+			document.getElementById('temperature').innerHTML = ((temp - 32) * 5 / 9).toFixed(2);
 			document.getElementById('text').innerHTML = data.current_observation.condition.text;
 			document.getElementById('country').innerHTML = data.location.country;
 			document.getElementById('lat').innerHTML = data.location.lat;
@@ -24,7 +25,7 @@ const getWeather = async (cityValue) => {
 			document.getElementById('timezone_id').innerHTML = data.location.timezone_id;
 			document.getElementById('wind_speed').innerHTML = data.current_observation.wind.speed;
 			document.getElementById('humidity').innerHTML = data.current_observation.atmosphere.humidity;
-			document.getElementById('sunset').innerHTML = data.current_observation.astromnomy.sunset;
+			document.getElementById('sunset').innerHTML = data.current_observation.astronomy.sunset;
 			document.getElementById('sunrise').innerHTML = data.current_observation.astronomy.sunrise;
 			console.log(data);
 
@@ -47,8 +48,8 @@ submit.addEventListener("click", (e) => {
 const famousCities = [
   { name: "New York", prefix: "ny" },
   { name: "Sydney", prefix: "syd" },
-  { name: "London", prefix: "ldn" },
-  { name: "Beijing", prefix: "bj" }
+  { name: "Capetown", prefix: "Cap" },
+  { name: "Beijing", prefix: "bei" }
 ];
 
 const getWeatherForCityRow = async (city, prefix) => {
@@ -57,7 +58,8 @@ const getWeatherForCityRow = async (city, prefix) => {
     const data = await response.json();
 
     document.getElementById(`${prefix}-country`).innerHTML = data.location.country;
-    document.getElementById(`${prefix}-temp`).innerHTML = data.current_observation.condition.temperature;
+	const temp2=data.current_observation.condition.temperature;
+    document.getElementById(`${prefix}-temp`).innerHTML = ((temp2 - 32) * 5 / 9).toFixed(2);
     document.getElementById(`${prefix}-lat`).innerHTML = data.location.lat;
     document.getElementById(`${prefix}-long`).innerHTML = data.location.long;
     document.getElementById(`${prefix}-timezone`).innerHTML = data.location.timezone_id;
@@ -69,3 +71,7 @@ const getWeatherForCityRow = async (city, prefix) => {
     console.error(`Failed to load weather for ${city}:`, err);
   }
 };
+
+famousCities.forEach(city => {
+  getWeatherForCityRow(city.name, city.prefix);
+});
